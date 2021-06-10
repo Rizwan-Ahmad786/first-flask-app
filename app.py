@@ -110,13 +110,13 @@ def update(id):
     if request.method=='POST':
         title = request.form['title']
         des = request.form['des']
-        data = Todo.query.filter_by(id=id, user_id = current_user.id).first()
+        data = Todo.query.filter_by(id=id, user_id=current_user.id).first()
         data.title = title
         data.des = des
         db.session.add(data)
         db.session.commit()
         return redirect('/index')
-    data = Todo.query.filter_by(id=id, user_id = current_user.id).first()
+    data = Todo.query.filter_by(id=id).first()
     return render_template('/update.html', data=data)
 
 
