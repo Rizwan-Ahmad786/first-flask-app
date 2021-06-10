@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Todos</title>
+{% endblock title %}
+
+{% block content %}
+
+<nav class="navbar navbar-dark ">
+    <a href="add_todo">
+        <li class=" login100-form-btn">Add Todo</li>
+    </a>
+    <a href="logout">
+        <li class="login100-form-btn">Logout</li>
+    </a>
+</nav>
+<!-- table secction -->
+{% if alldata %}
+    <div class="container-fluied m-3 mb-0 border" style="border-color: white;">
+        <table class="table table-dark table-striped  col-lg-12 col-sm-12 col-md-12">
+            <thead>
+                <tr >
+                    <th style="text-align: center;"  scope="col">Sno</th>
+                    <th   scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th style="text-align: center;"  scope="col">Action</th>
+                </tr>
+            </thead>
+            {% for data in alldata %}
+            <tbody style="text-align: center;" >
+                <tr>
+                    <td scope="row">{{loop.index}}</td>
+                    <td style="text-align: left;">{{ data.title }}</td>
+                    <td style="text-align: left;" >{{ data.des}}</td>
+                    <td>
+                        <a class="btn btn-danger btn-sm" onclick="confirm('Are you sure you want to delete this todo')"
+                            href="/delete/{{data.id}}">Delete</a>
+                        <a class="btn btn-success btn-sm" href="/update/{{data.id}}">Update</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <h1 style="color: white; text-align: center;">Click on ADD TODO Button and enter your first todo</h1>
+
+{% endif %}
+
+
+{% endblock content %}

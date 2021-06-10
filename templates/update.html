@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}
+   <title>Add Todo</title>
+{% endblock title %}
+
+{% block content %}
+
+<div class="container-login100">
+<form action="/index" method="POST" style="margin-top: 10px; margin-left:45px; align-items: center; background-color: white;"
+ class="col-lg-8 col-sm-10 col-md-8 col-10">
+    <h2 class="m-4 ">UPDATE YOUR TODO</h2>
+    <div class="container">
+    <div class="m-2">
+        <strong><label for="">Title</label></strong>
+        <input type="text" required class="form-control" value="{{ data.title }}" name="title" placeholder="Enter Title">
+    </div>
+    <div class="m-2">
+        <strong><label for="">Description</label></strong>
+        <input type="text" required placeholder="Enter Description" value="{{ data.des }}" name="des" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary btn-md mt-3 m-2 login100-form-btn">Update</button>
+</div>
+</form>
+</div>
+{% endblock %}

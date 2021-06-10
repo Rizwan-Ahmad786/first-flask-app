@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+<title>Sign Up</title> 
+{% endblock title %}
+
+
+{% block content %}
+
+<body>
+    
+    <section class="ftco-section container-login100 " >
+        <div class="login-wrap">
+            
+            <h2 style="margin-bottom: 0; color: aqua;" class="text-center m-3">Create Your Account</h2>
+            
+        <div class="border" style="background-color: white;">
+            <div class="row justify-content-center">
+                <div >
+                 <!-- Form section -->
+                        <form action="/signup" method="POST" class="signup-form ">
+                            {{ form.hidden_tag() }}
+                            <h5 class="mt-3 ml-3 mr-3">{{ wtf.form_field(form.username) }} </h5>
+                            <h5 class="ml-3 mr-3">{{ wtf.form_field(form.email) }}</h5>
+                            <h5 class="ml-3 mr-3">{{ wtf.form_field(form.password) }}</h5>
+                            <h5 class="ml-3 mr-3">{{ wtf.form_field(form.password2) }}
+                                
+                            </h5>
+                          
+                            <button class="btn btn-md btn-success ml-3" type="submit">Sign Up</button>
+                        </form>
+                        <h5 class="m-3">I'm already a member! <strong><a class="btn btn-sm btn-success" href="login" >Sign In</a></strong></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% endblock content %}
