@@ -10,6 +10,7 @@ from flask_login import LoginManager , login_manager, UserMixin, login_user, log
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
+SQLALCHEMY_TRACK_MODIFICATIONS = True
 Bootstrap(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
