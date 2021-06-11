@@ -6,15 +6,20 @@ from wtforms.validators import InputRequired, Email, Length, DataRequired, Equal
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager , login_manager, UserMixin, login_user, login_required, logout_user, current_user
+from sqlalchemy import asc
 import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-ENV = 'postgresql'
+ENV = 'dev'
 
-app.debug=False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qjbgrgemhxpznn:4c2a1c3cd4933ab3fe29bb20fa6d06819f7fd69d8d2d312e00bb3d11e2736d69@ec2-34-193-112-164.compute-1.amazonaws.com:5432/d89v8ls5o6h015'
+if ENV == 'dev':
+    app.debug=True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:rizwan786@localhost/db_postgres'
+else:
+    app.debug=False
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qjbgrgemhxpznn:4c2a1c3cd4933ab3fe29bb20fa6d06819f7fd69d8d2d312e00bb3d11e2736d69@ec2-34-193-112-164.compute-1.amazonaws.com:5432/d89v8ls5o6h015'
     
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 Bootstrap(app)
@@ -104,23 +109,21 @@ def index():
         newtodo = Todo(title=title, des=des, user_id=current_user.id)
         db.session.add(newtodo)
         db.session.commit()
-    alldata = Todo.query.filter_by(user_id=current_user.id)
+    alldata = Todo.query.filter_by(user_id=current_user.id).order_by(asc(Todo.id))
     return render_template('index.html', alldata=alldata)
 
 
 @app.route('/add_todo')
-@login_required
 def add_todo():
     return render_template('add_todo.html')
 
 
 @app.route('/update/<int:id>', methods=['GET','POST'])
-@login_required
 def update(id):
     if request.method=='POST':
         title = request.form['title']
         des = request.form['des']
-        data = Todo.query.filter_by(id=id, user_id=current_user.id).first()
+        data = Todo.query.filter_by(id=id).first()
         data.title = title
         data.des = des
         db.session.add(data)
@@ -131,7 +134,6 @@ def update(id):
 
 
 @app.route('/delete/<int:id>')
-@login_required
 def delete(id):
     delete_todo = Todo.query.filter_by(id=id).first()
     db.session.delete(delete_todo)
