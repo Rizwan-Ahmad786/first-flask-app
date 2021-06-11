@@ -9,7 +9,16 @@ from flask_login import LoginManager , login_manager, UserMixin, login_user, log
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:rizwan786@localhost/db_postgres'
+ENV = 'dev'
+
+if ENV == 'dev':
+    app.debug=True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:rizwan786@localhost/db_postgres'
+else:
+    app.debug=False
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://udiwryvygnuuua:98d6f9fedd5af9774bdc04b2135cf8743d9f4feec535d8f637e1fc9aaf47dff7@ec2-34-232-191-133.compute-1.amazonaws.com:5432/db6tnocfgodu9r'
+    
+    
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 Bootstrap(app)
 db = SQLAlchemy(app)
