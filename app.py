@@ -11,14 +11,10 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-ENV = 'prod'
+ENV = 'postgresql'
 
-if ENV == 'dev':
-    app.debug=True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:rizwan786@localhost/db_postgres'
-else:
-    app.debug=False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qjbgrgemhxpznn:4c2a1c3cd4933ab3fe29bb20fa6d06819f7fd69d8d2d312e00bb3d11e2736d69@ec2-34-193-112-164.compute-1.amazonaws.com:5432/d89v8ls5o6h015'
+app.debug=False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qjbgrgemhxpznn:4c2a1c3cd4933ab3fe29bb20fa6d06819f7fd69d8d2d312e00bb3d11e2736d69@ec2-34-193-112-164.compute-1.amazonaws.com:5432/d89v8ls5o6h015'
     
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 Bootstrap(app)
@@ -76,23 +72,21 @@ class RegistrationForm(FlaskForm):
 @app.route('/login', methods=['Get','POST'])
 def login():
     form = LoginForm()
-    if request.method == "POST":
-        if form.validate_on_submit():
-            user = User.query.filter_by(username=form.username.data).first()
-            if user is None or not check_password_hash(user.password, form.password.data): 
-                flash('Invalid username or password')
-                return redirect(url_for('login'))
-            login_user(user, remember=form.remember.data)
-            return redirect('index')
-    else:
-        return render_template('login.html', form=form)
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not check_password_hash(user.password, form.password.data): 
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember.data)
+        return redirect('index')
+    return render_template('login.html', form=form)
 
 
 @app.route('/signup', methods=['Get','POST'])
 def signup():
     form = RegistrationForm()
     if request.method == "POST":
-         if form.validate_on_submit():
+        if form.validate_on_submit():
             hashed_password = generate_password_hash(form.password.data, method='sha256')
             newuser = User(username=form.username.data, email=form.email.data, password = hashed_password)
             db.session.add(newuser)
