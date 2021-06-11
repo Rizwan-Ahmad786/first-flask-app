@@ -109,11 +109,13 @@ def index():
 
 
 @app.route('/add_todo')
+@login_required
 def add_todo():
     return render_template('add_todo.html')
 
 
 @app.route('/update/<int:id>', methods=['GET','POST'])
+@login_required
 def update(id):
     if request.method=='POST':
         title = request.form['title']
@@ -129,6 +131,7 @@ def update(id):
 
 
 @app.route('/delete/<int:id>')
+@login_required
 def delete(id):
     delete_todo = Todo.query.filter_by(id=id).first()
     db.session.delete(delete_todo)
