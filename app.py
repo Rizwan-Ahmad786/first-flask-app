@@ -9,7 +9,7 @@ from flask_login import LoginManager , login_manager, UserMixin, login_user, log
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
-ENV = 'dev'
+ENV = 'prod'
 
 if ENV == 'dev':
     app.debug=True
