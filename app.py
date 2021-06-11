@@ -81,7 +81,8 @@ def login():
                 return redirect(url_for('login'))
             login_user(user, remember=form.remember.data)
             return redirect('index')
-    return render_template('login.html', form=form)
+    else:
+        return render_template('login.html', form=form)
 
 
 @app.route('/signup', methods=['Get','POST'])
