@@ -37,10 +37,9 @@
                     <td scope="row">{{loop.index}}</td>
                     <td style="text-align: left;">{{ data.title }}</td>
                     <td style="text-align: left;" >{{ data.des}}</td>
-                    <td><a href="/set_complete_true/{{data.id}}"><input type="checkbox" name="complete" onclick="confirm('Is task is Completed?')" ></a></td>
+                    <td><a href="/set_complete_true/{{data.id}}"><input type="checkbox" name="complete" onclick="return confirm('Is task Completed?')" ></a></td>
                     <td>
-                        <a class="btn btn-danger btn-sm" onclick="confirm('Are you sure you want to delete this todo')"
-                            href="/delete/{{data.id}}">Delete</a>
+                        <a href="/delete/{{ data.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Todo?');">Delete</a>
                         <a class="btn btn-success btn-sm" href="/update/{{data.id}}">Update</a>
                     </td>
                 </tr>
@@ -49,7 +48,15 @@
         </table>
     </div>
 
-
-
-
 {% endblock content %}
+function ConfirmDelete()
+    {
+      var x = confirm("Are you sure you want to delete?");
+      if (x)
+          return true;
+      else
+        return false;
+    }
+
+
+
