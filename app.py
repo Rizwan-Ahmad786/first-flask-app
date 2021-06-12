@@ -119,6 +119,7 @@ def uncomplete_todos():
     uncomplete_todos = Todo.query.filter_by(user_id=current_user.id, complete = False).order_by(asc(Todo.id))
     return render_template('uncomplete_todos.html', uncomplete_todos=uncomplete_todos)
 
+
 @app.route('/set_complete_true/<int:id>')
 def set_complete_true(id):
     data = Todo.query.filter_by(id=id).first()
@@ -127,11 +128,11 @@ def set_complete_true(id):
     db.session.commit()
     return redirect('/uncomplete_todos')
 
+
 @app.route('/completed_todos')
 def completed_todos():
     completed_todos = Todo.query.filter_by(user_id=current_user.id, complete = True).order_by(asc(Todo.id))
     return render_template('completed_todos.html', completed_todos=completed_todos)
-
 
 
 @app.route('/update/<int:id>', methods=['GET','POST'])
@@ -144,7 +145,7 @@ def update(id):
         data.des = des
         db.session.add(data)
         db.session.commit()
-        return redirect('/index')
+        return redirect('/uncomplete_todos')
     data = Todo.query.filter_by(id=id).first()
     return render_template('/update.html', data=data)
 
@@ -154,7 +155,7 @@ def delete(id):
     delete_todo = Todo.query.filter_by(id=id).first()
     db.session.delete(delete_todo)
     db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('uncomplete_todos'))
 
 
 @app.route('/logout')
