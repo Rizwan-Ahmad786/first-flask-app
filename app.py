@@ -12,7 +12,7 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-ENV = 'postgre'
+ENV = 'postgresql'
 
 if ENV == 'local':
     app.debug=True
@@ -47,6 +47,7 @@ class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200))
     des = db.Column(db.String(500))
+    complete = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
@@ -84,7 +85,7 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember.data)
-        return redirect('index')
+        return redirect('uncomplete_todos')
     return render_template('login.html', form=form)
 
 
@@ -100,24 +101,37 @@ def signup():
             return redirect('login')
     return render_template('signup.html', form=form)
 
-
-@app.route('/index', methods=['GET', 'POST'])
+@app.route('/add_todo', methods=['GET','POST'])
 @login_required
-def index():
+def add_todo():
     if request.method == "POST":
         title = request.form['title']
         des = request.form['des']
-        newtodo = Todo(title=title, des=des, user_id=current_user.id)
+        newtodo = Todo(title=title, des=des, complete = False, user_id=current_user.id)
         db.session.add(newtodo)
         db.session.commit()
-    alldata = Todo.query.filter_by(user_id=current_user.id).order_by(asc(Todo.id))
-    return render_template('index.html', alldata=alldata)
-
-
-@app.route('/add_todo')
-@login_required
-def add_todo():
+        return redirect('uncomplete_todos')
     return render_template('add_todo.html')
+
+
+@app.route('/uncomplete_todos')
+def uncomplete_todos():
+    uncomplete_todos = Todo.query.filter_by(user_id=current_user.id, complete = False).order_by(asc(Todo.id))
+    return render_template('uncomplete_todos.html', uncomplete_todos=uncomplete_todos)
+
+@app.route('/set_complete_true/<int:id>')
+def set_complete_true(id):
+    data = Todo.query.filter_by(id=id).first()
+    data.complete = True
+    db.session.add(data)
+    db.session.commit()
+    return redirect('/uncomplete_todos')
+
+@app.route('/completed_todos')
+def completed_todos():
+    completed_todos = Todo.query.filter_by(user_id=current_user.id, complete = True).order_by(asc(Todo.id))
+    return render_template('completed_todos.html', completed_todos=completed_todos)
+
 
 
 @app.route('/update/<int:id>', methods=['GET','POST'])
