@@ -17,46 +17,66 @@
     </a>
 </nav>
 <!-- table secction -->
-    <div class="container-fluied m-3 mt-5 mb-0 border" style="border-color: white;">
-        <table class="table table-dark table-striped  col-lg-12 col-sm-12 col-md-12">
-            <thead>
-                <tr>
-                    <h1 class="m-1" style="background-color: white; text-align: center; color: rgb(5, 5, 5);">List of Uncompleted Todos</h1>
-                </tr>
-                <tr >
-                    <th style="text-align: center;"  scope="col">Sno</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Description</th>
-                    <th style="text-align: center;" scope="col">Task Completed</th>
-                    <th style="text-align: center;"  scope="col">Action</th>
-                </tr>
-            </thead>
-            {% for data in uncomplete_todos %}
-            <tbody style="text-align: center;" >
-                <tr>
-                    <td scope="row">{{loop.index}}</td>
-                    <td style="text-align: left;">{{ data.title }}</td>
-                    <td style="text-align: left;" >{{ data.des}}</td>
-                    <td><a href="/set_complete_true/{{data.id}}"><input type="checkbox" name="complete" onclick="return confirm('Is task Completed?')" ></a></td>
-                    <td>
-                        <a href="/delete/{{ data.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Todo?');">Delete</a>
+<div class="container-fluied m-3 mt-5 mb-0 border" style="border-color: white;" method="POST">
+    <table class="table table-dark table-striped  col-lg-12 col-sm-12 col-md-12">
+        <thead>
+            <tr>
+                <h1 class="m-1" style="background-color: white; text-align: center; color: rgb(5, 5, 5);">List of
+                    Uncompleted Todos</h1>
+            </tr>
+            <tr>
+                <th style="text-align: center;" scope="col">Sno</th>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th style="text-align: center;" scope="col">Task Completed</th>
+                <th style="text-align: center;" scope="col">Action</th>
+            </tr>
+        </thead>
+        {% for data in uncomplete_todos %}
+        <tbody style="text-align: center;">
+            <tr>
+                <td scope="row">{{loop.index}}</td>
+                <td style="text-align: left;">{{ data.title }}</td>
+                <td style="text-align: left;">{{ data.des}}</td>
+                <td>                    
+                    <form action="/set_complete_true/{{data.id}}" method="POST" class="form-check">
+                        <button><input style="height: auto; width: auto;" type="checkbox" name="checkbox" value="" onclick="return confirm('Are you sure you  this Todo?');"></button>
+                    </form>
+                <td>
+                    <form action="/delete/{{ data.id }}" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="submit" value="DELETE" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Are you sure you want to delete this Todo?');">
                         <a class="btn btn-success btn-sm" href="/update/{{data.id}}">Update</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                    </form>
+
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<!-- <script
+src="https://code.jquery.com/jquery-3.2.1.min.js"
+integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(function(){
+        $("input#complete_todo_checkbox").click(function(){
+            $.ajax({
+                url:"/signup/", 
+                type: "POST",
+            
+        }); 
+    }); 
+}
+     </script> -->
+
 
 {% endblock content %}
-function ConfirmDelete()
-    {
-      var x = confirm("Are you sure you want to delete?");
-      if (x)
-          return true;
-      else
-        return false;
-    }
-
-
-
