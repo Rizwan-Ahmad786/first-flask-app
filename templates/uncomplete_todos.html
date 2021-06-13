@@ -40,7 +40,7 @@
                 <td style="text-align: left;">{{ data.des}}</td>
                 <td>                    
                     <form action="/set_complete_true/{{data.id}}" method="POST" class="form-check">
-                        <button><input style="height: auto; width: auto;" type="checkbox" name="checkbox" value="" onclick="return confirm('Are you sure you  this Todo?');"></button>
+                        <button><input style="height: auto; width: auto;" type="checkbox" name="checkbox" value="" onclick="return confirm('Is this todo is completed?');"></button>
                     </form>
                 <td>
                     <form action="/delete/{{ data.id }}" method="POST">
