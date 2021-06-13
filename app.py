@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
@@ -12,7 +12,7 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-ENV = 'postgresql'
+ENV = 'local'
 
 if ENV == 'local':
     app.debug=True
@@ -55,6 +55,7 @@ class LoginForm(FlaskForm):
     username = StringField('User Name', validators=[InputRequired(), Length(min=4, max=35)])
     password = PasswordField('Password',validators=[InputRequired(), Length(min=8, max=80)] )
     remember = BooleanField('remember me')
+    
 
 
 class RegistrationForm(FlaskForm):
@@ -98,8 +99,8 @@ def signup():
             newuser = User(username=form.username.data, email=form.email.data, password = hashed_password)
             db.session.add(newuser)
             db.session.commit()
-            return redirect('login')
-    return render_template('signup.html', form=form)
+            return jsonify('login')
+    return jsonify('signup.html', form=form)
 
 @app.route('/add_todo', methods=['GET','POST'])
 @login_required
@@ -115,27 +116,33 @@ def add_todo():
 
 
 @app.route('/uncomplete_todos')
+@login_required
 def uncomplete_todos():
     uncomplete_todos = Todo.query.filter_by(user_id=current_user.id, complete = False).order_by(asc(Todo.id))
     return render_template('uncomplete_todos.html', uncomplete_todos=uncomplete_todos)
 
 
-@app.route('/set_complete_true/<int:id>')
+@app.route('/set_complete_true/<int:id>', methods=['GET', 'POST'])
+@login_required
 def set_complete_true(id):
-    data = Todo.query.filter_by(id=id).first()
-    data.complete = True
-    db.session.add(data)
-    db.session.commit()
+    if request.method=="POST":
+        data = Todo.query.filter_by(id=id).first()
+        data.complete = True
+        db.session.add(data)
+        db.session.commit()
+        return redirect('/uncomplete_todos')
     return redirect('/uncomplete_todos')
 
 
 @app.route('/completed_todos')
+@login_required
 def completed_todos():
     completed_todos = Todo.query.filter_by(user_id=current_user.id, complete = True).order_by(asc(Todo.id))
     return render_template('completed_todos.html', completed_todos=completed_todos)
 
 
 @app.route('/update/<int:id>', methods=['GET','POST'])
+@login_required
 def update(id):
     if request.method=='POST':
         title = request.form['title']
@@ -147,14 +154,25 @@ def update(id):
         db.session.commit()
         return redirect('/uncomplete_todos')
     data = Todo.query.filter_by(id=id).first()
-    return render_template('/update.html', data=data)
+    check_id = Todo.query.all()
+    for check in check_id:
+        if check.id == id:
+            if  id == data.id and data.user_id == current_user.id and data.complete==False:
+                return render_template('/update.html', data=data)
+            break
+    flash ("You entered wrong todo id or this todo is already completed")
+    return redirect(url_for('uncomplete_todos'))
 
-
-@app.route('/delete/<int:id>')
+    
+@app.route('/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete(id):
-    delete_todo = Todo.query.filter_by(id=id).first()
-    db.session.delete(delete_todo)
-    db.session.commit()
+    if request.method=="POST":
+        delete_todo = Todo.query.filter_by(id=id).first()
+        db.session.delete(delete_todo)
+        db.session.commit()
+        return redirect(url_for('uncomplete_todos'))
+    flash ("You can only delete your todo by clicking on Delete button")
     return redirect(url_for('uncomplete_todos'))
 
 
