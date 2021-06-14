@@ -12,7 +12,7 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-ENV = 'postgre'
+ENV = 'local'
 
 if ENV == 'local':
     app.debug=True
@@ -112,7 +112,8 @@ def add_todo():
         db.session.add(newtodo)
         db.session.commit()
         return redirect('uncomplete_todos')
-    return render_template('add_todo.html')
+    else:
+        return render_template('add_todo.html')
 
 
 @app.route('/uncomplete_todos')

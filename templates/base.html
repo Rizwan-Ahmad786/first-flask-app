@@ -31,8 +31,16 @@
     <link rel="stylesheet" type="text/css" href="../static/css/util.css">
     <link rel="stylesheet" type="text/css" href="../static/css/main.css">
   <!--===============================================================================================-->
-
-  {% block title %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+  $(document).ready(function(){
+    $(".checkbutton").click(function(){
+      $(".checkbtn").click();
+      alert("hello")
+    });
+  });
+  </script>
+    {% block title %}
     
   {% endblock title %}
 </head>

@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 {% block title %}
 <title>Uncomplete Todos</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $(".checkbutton").click(function(){
+    $(".checkbtn").click();
+    alert("hello")
+  });
+});
+</script>
 {% endblock title %}
 
 {% block content %}
@@ -38,9 +48,11 @@
                 <td scope="row">{{loop.index}}</td>
                 <td style="text-align: left;">{{ data.title }}</td>
                 <td style="text-align: left;">{{ data.des}}</td>
-                <td>                    
-                    <form action="/set_complete_true/{{data.id}}" method="POST" class="form-check">
-                        <button><input style="height: auto; width: auto;" type="checkbox" name="checkbox" value="" onclick="return confirm('Is this todo is completed?');"></button>
+
+                <td>
+                    <form action="/set_complete_true/{{data.id}}" method="POST">
+                       <input id="checkboxsubmit" type="submit" value="" >
+                       <input type="checkbox" id="checkbutton"  onclick="return confirm('Is this todo is completed?')">
                     </form>
                 <td>
                     <form action="/delete/{{ data.id }}" method="POST">
@@ -59,24 +71,11 @@
 </div>
 
 
-
-
-
-<!-- <script
-src="https://code.jquery.com/jquery-3.2.1.min.js"
-integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-crossorigin="anonymous"></script>
-<script type="text/javascript">
-    $(function(){
-        $("input#complete_todo_checkbox").click(function(){
-            $.ajax({
-                url:"/signup/", 
-                type: "POST",
-            
-        }); 
-    }); 
-}
-     </script> -->
-
-
+<script>
+$("#checkbutton").change(function() {
+    if(this.checked) {
+        $('#checkboxsubmit').trigger('click');
+    }
+});
+</script>
 {% endblock content %}
