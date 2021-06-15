@@ -34,7 +34,7 @@
         style=" word-wrap: break-word;">
         <thead>
             <tr>
-                <th colspan="5">
+                <th colspan="4">
                 <h1 class="m-1" style="background-color: white; text-align: center; color: rgb(5, 5, 5);">List of Completed Todos</h1>
             </th>
             </tr>
@@ -42,6 +42,7 @@
                 <th style="text-align: center;" scope="col">Sno</th>
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
+                <th style="text-align: center;" scope="col">Date Created</th>
             </tr>
         </thead>
         {% for data in completed_todos %}
@@ -50,6 +51,7 @@
                 <td scope="row">{{loop.index}}</td>
                 <td style="text-align: left;">{{ data.title }}</td>
                 <td style="text-align: left;">{{ data.des}}</td>
+                <td class="text-align: center;">{{ data.datecreated }}</td>
             </tr>
             {% endfor %}
         </tbody>

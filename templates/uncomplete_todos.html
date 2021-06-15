@@ -30,12 +30,12 @@
 
 
 <!-- table secction -->
-<div class=" mt-5 ">
+<div class=" mt-5 container ">
     <table class="container table  table-container table-dark table-bordered table-striped text-wrap "
         style=" word-wrap: break-word;">
         <thead>
             <tr>
-                <th colspan="5">
+                <th colspan="6">
                     <h1 style="margin: 0px; background-color: white; text-align: center; color: rgb(5, 5, 5);">List of
                         Uncompleted Todos</h1>
                 </th>
@@ -44,6 +44,7 @@
                 <th style="text-align: center; " scope="col">Sno</th>
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
+                <th style="text-align: center;" scope="col">Date Created</th>
                 <th style="text-align: center;" scope="col">Task Completed</th>
                 <th style="text-align: center;" scope="col">Action</th>
             </tr>
@@ -54,17 +55,24 @@
                 <td scope="row">{{loop.index}}</td>
                 <td style="text-align: left;">{{ data.title }}</td>
                 <td class="word-wrap" style="text-align: left; height: auto;">{{ data.des}}</td>
-
+                <td class="text-align: center;">{{ data.datecreated }}</td>
+                <!-- checkbox -->
                 <td>
 
                     <form action="/set_complete_true/{{data.id}}" method="POST">
+                        <input type="checkbox" id="checkbutton" style="width: initial; height: initial; " />
+                        <input type="hidden" name="DELETE">
                         <input id="checkboxsubmit" type="submit" value="">
-                        <input type="checkbox" id="checkbutton" />
+
+
+
+
                     </form>
 
                     <!-- <form action="/cancelonclick">
-                        <input id="return" value="" type="submit">
-                    </form> -->
+                            <input id="return" value="" type="submit">
+                        </form> -->
+
                 <td>
                     <div style="  display: inline-flex;">
                         <form action="/delete/{{ data.id }}" method="POST">
@@ -88,27 +96,40 @@
 
 <script>
 
-    $("#checkbutton").click(function () {
-        window.alert("Todo marked as completed and added to completed todos")
-        $('#checkboxsubmit').trigger('click');
 
+    $(document).ready(function () {
+        $("#checkbutton").change(function () {
+            if (confirm('okkkkk')) {
+                event.stopPropagation();
+                alert("jhkdfhk");
+                $("#checkboxsubmit").click();
+
+            }
+            else{
+                alert("cancel")
+            
+            }
+
+        });
     });
-
-
-    // $("#checkbutton").click(function () {
-    //     if (confirm('Is this todo is completed?')) {
-    //         $('#checkboxsubmit').trigger('click'); 
-    //     }
-    //     else{
-    //         location.reload(); 
-    //         alert("hh")
-    //         $('#return').trigger('click'); 
-
-
-    //     }
-    // }
-    // );
-
-
 </script>
+
+
+<!-- <script>
+
+    function redirect(){
+        if(this.checked) {
+            if (confirm('Is this todo is completed?')) {
+                $('#checkboxsubmit').trigger('click');
+            }
+            else {
+                location.reload();
+                $('#return').trigger('click');
+            }
+        }
+    }
+    
+
+
+</script> -->
 {% endblock content %}
