@@ -1,20 +1,21 @@
-
-
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import InputRequired, Email, Length, DataRequired, EqualTo, ValidationError
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate, migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_manager, UserMixin, login_user, login_required, logout_user, current_user
 from sqlalchemy import asc
 import os
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-ENV = 'local'
+ENV = 'postgresql'
 
 if ENV == 'local':
     app.debug = True
@@ -27,6 +28,7 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 Bootstrap(app)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -52,6 +54,7 @@ class Todo(db.Model):
     title = db.Column(db.String(200))
     des = db.Column(db.String(500))
     complete = db.Column(db.Boolean)
+    datecreated = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
