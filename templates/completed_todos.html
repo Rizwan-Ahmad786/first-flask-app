@@ -5,24 +5,38 @@
 
 {% block content %}
 
-<nav class="navbar navbar-dark ">
-    <a href="add_todo">
-        <li class=" login100-form-btn">Add Todo</li>
-    </a>
-    <a href="uncomplete_todos">
-        <li class=" login100-form-btn">Uncomplete Todos</li>
-    </a>
-    <a href="logout">
-        <li class="login100-form-btn">Logout</li>
-    </a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="add_todo">ADD TODO</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link navbar-brand active " aria-current="page" href="uncomplete_todos">Uncomplete
+                        Todos</a>
+                </li>
+
+            </ul>
+            <form action="/logout" class="d-flex">
+
+                <button class="btn btn-md btn-danger" type="submit">LOGOUT</button>
+            </form>
+        </div>
+    </div>
 </nav>
 <!-- table secction -->
 
-<div class="container-fluied m-3 mt-5 mb-0 border" style="border-color: white;">
-    <table class="table table-dark table-striped  col-lg-12 col-sm-12 col-md-12">
+<div class=" mt-5 ">
+    <table class="container table  table-container table-dark table-bordered table-striped text-wrap "
+        style=" word-wrap: break-word;">
         <thead>
             <tr>
+                <th colspan="5">
                 <h1 class="m-1" style="background-color: white; text-align: center; color: rgb(5, 5, 5);">List of Completed Todos</h1>
+            </th>
             </tr>
             <tr>
                 <th style="text-align: center;" scope="col">Sno</th>

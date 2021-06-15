@@ -1,34 +1,28 @@
 {% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
 {% block title %}
-<title>Update Todo</title>
+<title>Add Todo</title>
 {% endblock title %}
 
 {% block content %}
+<div class="m-5">
+    <div class="container" style="background-color: rgb(9, 13, 228); color: rgb(248, 244, 244); padding: 10px;">
+        <a href="/uncomplete_todos" style="float: right; margin: -10px -10px 0px 0px;  padding: 8px 25px 8px 25px; "
+            type="button" class="btn-close btn-lg btn-danger" aria-label="Close">
+        </a>
 
-<div class="container-login100">
-    <form action="/update/{{ data.id }}" method="POST"
-        style="padding: 0;  align-items: center; background-color: white;" class="col-lg-8 col-sm-10 col-md-8 col-10">
-        <div class="container" style="background-color: rgb(9, 13, 228); color: rgb(248, 244, 244); padding: 10px;">
-            <a href="/uncomplete_todos" style="float: right; margin: -10px -10px 0px 0px;  padding: 8px 25px 8px 25px; "
-                type="button" class="btn-close btn-lg btn-danger" aria-label="Close">
-            </a>
+        <h2 style="margin: 0;">UPDATE TODO</h2>
+    </div>
+    <div class=" container shadow p-3 mb-5 bg-body rounded">
+        <form action="/updatetodo/{{data.id}}" method="POST">
+            {{ form.hidden_tag() }}
+            <h5 class="m-4">{{ wtf.form_field(form.title, value=data.title) }}</h5>
+            <h5 class="m-4">{{ wtf.form_field(form.des, value=data.des) }}</h5>
 
-            <h2 style="margin: 0;">UPDATE YOUR TODO</h2>
-        </div>
+            <button type="submit" class="btn btn-primary btn-md mt-3 m-2 login100-form-btn">Submit</button>
+        </form>
 
-        <div class="container">
-            <div class="m-2">
-                <strong><label for="">Title</label></strong>
-                <input type="text" required class="form-control" value="{{ data.title }}" name="title"
-                    placeholder="Enter Title">
-            </div>
-            <div class="m-2">
-                <strong><label for="">Description</label></strong>
-                <input type="text" required placeholder="Enter Description" value="{{ data.des }}" name="des"
-                    class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary btn-md mt-3 m-2 login100-form-btn">Update</button>
-        </div>
-    </form>
+    </div>
 </div>
+
 {% endblock %}

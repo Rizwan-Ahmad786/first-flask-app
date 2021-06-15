@@ -1,3 +1,5 @@
+
+
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
@@ -5,20 +7,20 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import InputRequired, Email, Length, DataRequired, EqualTo, ValidationError
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager , login_manager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_manager, UserMixin, login_user, login_required, logout_user, current_user
 from sqlalchemy import asc
 import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-ENV = 'postgresql'
+ENV = 'local'
 
 if ENV == 'local':
-    app.debug=True
+    app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:rizwan786@localhost/db_postgres'
 else:
-    app.debug=True
+    app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qjbgrgemhxpznn:4c2a1c3cd4933ab3fe29bb20fa6d06819f7fd69d8d2d312e00bb3d11e2736d69@ec2-34-193-112-164.compute-1.amazonaws.com:5432/d89v8ls5o6h015'
 
 
@@ -31,19 +33,21 @@ login_manager.login_view = 'login'
 
 
 class User(UserMixin, db.Model):
-    __tablename__='user'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), index=True, unique=True)
     email = db.Column(db.String(200), index=True, unique=True)
     password = db.Column(db.String(200))
     todos = db.relationship('Todo', backref='author', lazy='dynamic')
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-class Todo(db.Model): 
-    __tablename__='todo'
+
+class Todo(db.Model):
+    __tablename__ = 'todo'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200))
     des = db.Column(db.String(500))
@@ -52,18 +56,22 @@ class Todo(db.Model):
 
 
 class LoginForm(FlaskForm):
-    username = StringField('User Name', validators=[InputRequired(), Length(min=4, max=35)])
-    password = PasswordField('Password',validators=[InputRequired(), Length(min=8, max=80)] )
+    username = StringField('User Name', validators=[
+                           InputRequired(), Length(min=4, max=35)])
+    password = PasswordField('Password', validators=[
+                             InputRequired(), Length(min=8, max=80)])
     remember = BooleanField('remember me')
-    
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField('User Name', validators=[InputRequired(), Length(min=4, max=35)])
-    email = StringField('Email', validators=[InputRequired(),Email(message='Invalid email'), Length(max=35)])
-    password = PasswordField('Password',validators=[InputRequired(), Length(min=8, max=80)] )
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-
+    username = StringField('User Name', validators=[
+                           InputRequired(), Length(min=4, max=35)])
+    email = StringField('Email', validators=[InputRequired(), Email(
+        message='Invalid email'), Length(max=35)])
+    password = PasswordField('Password', validators=[
+                             InputRequired(), Length(min=8, max=80)])
+    password2 = PasswordField('Repeat Password', validators=[
+                              DataRequired(), EqualTo('password')])
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
@@ -76,13 +84,21 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Please use a different email address.')
 
 
+class AddTodo(FlaskForm):
+    title = StringField('Title', validators=[
+                        InputRequired(), Length(min=1, max=200)])
+    des = StringField('Description', validators=[
+                      InputRequired(), Length(min=1, max=500)])
+    submit = SubmitField('Submit')
+
+
 @app.route('/')
-@app.route('/login', methods=['Get','POST'])
+@app.route('/login', methods=['Get', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not check_password_hash(user.password, form.password.data): 
+        if user is None or not check_password_hash(user.password, form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember.data)
@@ -90,43 +106,54 @@ def login():
     return render_template('login.html', form=form)
 
 
-@app.route('/signup', methods=['Get','POST'])
+@app.route('/signup', methods=['Get', 'POST'])
 def signup():
     form = RegistrationForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            hashed_password = generate_password_hash(form.password.data, method='sha256')
-            newuser = User(username=form.username.data, email=form.email.data, password = hashed_password)
+            hashed_password = generate_password_hash(
+                form.password.data, method='sha256')
+            newuser = User(username=form.username.data,
+                           email=form.email.data, password=hashed_password)
             db.session.add(newuser)
             db.session.commit()
-            return jsonify('login')
-    return jsonify('signup.html', form=form)
+            return redirect('login')
+    return render_template('signup.html', form=form)
 
-@app.route('/add_todo', methods=['GET','POST'])
+
+@app.route('/add_todo', methods=['GET', 'POST'])
 @login_required
 def add_todo():
+    form = AddTodo()
     if request.method == "POST":
         title = request.form['title']
         des = request.form['des']
-        newtodo = Todo(title=title, des=des, complete = False, user_id=current_user.id)
+        newtodo = Todo(title=title, des=des, complete=False,
+                       user_id=current_user.id)
         db.session.add(newtodo)
         db.session.commit()
         return redirect('uncomplete_todos')
     else:
-        return render_template('add_todo.html')
+        return render_template('add_todo.html', form=form)
 
 
 @app.route('/uncomplete_todos')
 @login_required
 def uncomplete_todos():
-    uncomplete_todos = Todo.query.filter_by(user_id=current_user.id, complete = False).order_by(asc(Todo.id))
+    uncomplete_todos = Todo.query.filter_by(
+        user_id=current_user.id, complete=False).order_by(asc(Todo.id))
     return render_template('uncomplete_todos.html', uncomplete_todos=uncomplete_todos)
 
+@app.route('/cancelonclick')
+def cancelonclick():
+    return redirect('uncomplete_todos')
+    
 
-@app.route('/set_complete_true/<int:id>', methods=['GET', 'POST'])
+
+@app.route('/set_complete_true/<int:id>', methods=['POST'])
 @login_required
 def set_complete_true(id):
-    if request.method=="POST":
+    if request.method == "POST":
         data = Todo.query.filter_by(id=id).first()
         data.complete = True
         db.session.add(data)
@@ -138,14 +165,15 @@ def set_complete_true(id):
 @app.route('/completed_todos')
 @login_required
 def completed_todos():
-    completed_todos = Todo.query.filter_by(user_id=current_user.id, complete = True).order_by(asc(Todo.id))
+    completed_todos = Todo.query.filter_by(
+        user_id=current_user.id, complete=True).order_by(asc(Todo.id))
     return render_template('completed_todos.html', completed_todos=completed_todos)
 
 
-@app.route('/update/<int:id>', methods=['GET','POST'])
+@app.route('/updatetodo/<int:id>', methods=['POST'])
 @login_required
-def update(id):
-    if request.method=='POST':
+def updatetodo(id):
+    if request.method == 'POST':
         title = request.form['title']
         des = request.form['des']
         data = Todo.query.filter_by(id=id).first()
@@ -154,26 +182,29 @@ def update(id):
         db.session.add(data)
         db.session.commit()
         return redirect('/uncomplete_todos')
-    data = Todo.query.filter_by(id=id).first()
-    check_id = Todo.query.all()
-    for check in check_id:
-        if check.id == id:
-            if  id == data.id and data.user_id == current_user.id and data.complete==False:
-                return render_template('/update.html', data=data)
-            break
-    flash ("You entered wrong todo id or this todo is already completed")
-    return redirect(url_for('uncomplete_todos'))
 
-    
-@app.route('/delete/<int:id>', methods=['GET', 'POST'])
+
+@app.route('/update/<int:id>', methods=['POST'])
+@login_required
+def update(id):
+    form = AddTodo()
+    if request.method == 'POST':
+        data = Todo.query.filter_by(id=id).first()
+        if id == data.id and data.user_id == current_user.id and data.complete == False:
+            return render_template('/update.html', data=data, form=form)
+        flash("You entered wrong todo id or this todo is already completed")
+        return redirect(url_for('uncomplete_todos'))
+
+
+@app.route('/delete/<int:id>', methods=['POST'])
 @login_required
 def delete(id):
-    if request.method=="POST":
+    if request.method == "POST":
         delete_todo = Todo.query.filter_by(id=id).first()
         db.session.delete(delete_todo)
         db.session.commit()
         return redirect(url_for('uncomplete_todos'))
-    flash ("You can only delete your todo by clicking on Delete button")
+    flash("You can only delete your todo by clicking on Delete button")
     return redirect(url_for('uncomplete_todos'))
 
 
@@ -184,5 +215,5 @@ def logout():
     return redirect(url_for('login'))
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     app.run(debug=True)
