@@ -1,41 +1,47 @@
 {% extends 'base.html' %}
 {% block title %}
 <title>Uncomplete Todos</title>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-  $(".checkbutton").click(function(){
-    $(".checkbtn").click();
-    alert("hello")
-  });
-});
-</script>
 {% endblock title %}
 
 {% block content %}
 
-<nav class="navbar navbar-dark ">
-    <a href="add_todo">
-        <li class=" login100-form-btn">Add Todo</li>
-    </a>
-    <a href="completed_todos">
-        <li class=" login100-form-btn">Completed Todos</li>
-    </a>
-    <a href="logout">
-        <li class="login100-form-btn">Logout</li>
-    </a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="add_todo">ADD TODO</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link navbar-brand active " aria-current="page" href="completed_todos">Completed
+                        Todos</a>
+                </li>
+
+            </ul>
+            <form action="/logout" class="d-flex">
+
+                <button class="btn btn-md btn-danger" type="submit">LOGOUT</button>
+            </form>
+        </div>
+    </div>
 </nav>
+
+
 <!-- table secction -->
-<div class="container-fluied m-3 mt-5 mb-0 border" style="border-color: white;" method="POST">
-    <table class="table table-dark table-striped  col-lg-12 col-sm-12 col-md-12">
+<div class=" mt-5 ">
+    <table class="container table  table-container table-dark table-bordered table-striped text-wrap "
+        style=" word-wrap: break-word;">
         <thead>
             <tr>
-                <h1 class="m-1" style="background-color: white; text-align: center; color: rgb(5, 5, 5);">List of
-                    Uncompleted Todos</h1>
+                <th colspan="5">
+                    <h1 style="margin: 0px; background-color: white; text-align: center; color: rgb(5, 5, 5);">List of
+                        Uncompleted Todos</h1>
+                </th>
             </tr>
             <tr>
-                <th style="text-align: center;" scope="col">Sno</th>
+                <th style="text-align: center; " scope="col">Sno</th>
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
                 <th style="text-align: center;" scope="col">Task Completed</th>
@@ -47,20 +53,29 @@ $(document).ready(function(){
             <tr>
                 <td scope="row">{{loop.index}}</td>
                 <td style="text-align: left;">{{ data.title }}</td>
-                <td style="text-align: left;">{{ data.des}}</td>
+                <td class="word-wrap" style="text-align: left; height: auto;">{{ data.des}}</td>
 
                 <td>
+
                     <form action="/set_complete_true/{{data.id}}" method="POST">
-                       <input id="checkboxsubmit" type="submit" value="" >
-                       <input type="checkbox" id="checkbutton"  onclick="return confirm('Is this todo is completed?')">
+                        <input id="checkboxsubmit" type="submit" value="">
+                        <input type="checkbox" id="checkbutton" />
                     </form>
+
+                    <!-- <form action="/cancelonclick">
+                        <input id="return" value="" type="submit">
+                    </form> -->
                 <td>
-                    <form action="/delete/{{ data.id }}" method="POST">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" value="DELETE" class="btn btn-danger btn-sm"
-                            onclick="return confirm('Are you sure you want to delete this Todo?');">
-                        <a class="btn btn-success btn-sm" href="/update/{{data.id}}">Update</a>
-                    </form>
+                    <div style="  display: inline-flex;">
+                        <form action="/delete/{{ data.id }}" method="POST">
+                            <input type="hidden" name="DELETE">
+                            <input type="submit" value="DELETE" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this Todo?');">
+                        </form>
+                        <form action="/update/{{data.id}}" method="POST" style="float: right;">
+                            <input type="submit" class="btn btn-success btn-sm" value="UPDATE">
+                        </form>
+                    </div>
 
 
                 </td>
@@ -68,14 +83,32 @@ $(document).ready(function(){
             {% endfor %}
         </tbody>
     </table>
+
 </div>
 
-
 <script>
-$("#checkbutton").change(function() {
-    if(this.checked) {
+
+    $("#checkbutton").click(function () {
+        window.alert("Todo marked as completed and added to completed todos")
         $('#checkboxsubmit').trigger('click');
-    }
-});
+
+    });
+
+
+    // $("#checkbutton").click(function () {
+    //     if (confirm('Is this todo is completed?')) {
+    //         $('#checkboxsubmit').trigger('click'); 
+    //     }
+    //     else{
+    //         location.reload(); 
+    //         alert("hh")
+    //         $('#return').trigger('click'); 
+
+
+    //     }
+    // }
+    // );
+
+
 </script>
 {% endblock content %}
