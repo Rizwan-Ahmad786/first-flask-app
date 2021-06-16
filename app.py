@@ -15,7 +15,7 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-ENV = 'postgresql'
+ENV = 'postgre'
 
 if ENV == 'local':
     app.debug = True
@@ -99,13 +99,14 @@ class AddTodo(FlaskForm):
 @app.route('/login', methods=['Get', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not check_password_hash(user.password, form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-        login_user(user, remember=form.remember.data)
-        return redirect('uncomplete_todos')
+    if request.method == "POST":
+        if form.validate_on_submit():
+            user = User.query.filter_by(username=form.username.data).first()
+            if user is None or not check_password_hash(user.password, form.password.data):
+                flash('Invalid username or password')
+                return redirect(url_for('login'))
+            login_user(user, remember=form.remember.data)
+            return redirect('uncomplete_todos')
     return render_template('login.html', form=form)
 
 
