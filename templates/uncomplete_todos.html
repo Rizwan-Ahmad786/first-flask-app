@@ -99,14 +99,14 @@
 
     $(document).ready(function () {
         $("#checkbutton").change(function () {
-            if (confirm('okkkkk')) {
+            if (confirm('Is this todo is completed?')) {
                 event.stopPropagation();
                 $("#checkboxsubmit").click();
 
             }
             else{
-                alert("You cancel this")
-            
+                alert("You cancel it.")
+                location.reload();
             }
 
         });
