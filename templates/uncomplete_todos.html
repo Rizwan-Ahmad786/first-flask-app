@@ -60,8 +60,8 @@
                 <td>
 
                     <form action="/set_complete_true/{{data.id}}" method="POST">
-                        <input type="checkbox" id="checkbutton" style="width: initial; height: initial; " />
-                        <input type="hidden" name="DELETE">
+                        <input type="checkbox" id="checkbutton" onclick="redirect()" style="width: initial; height: initial; " />
+                       
                         <input id="checkboxsubmit" type="submit" value="">
 
 
@@ -69,9 +69,9 @@
 
                     </form>
 
-                    <!-- <form action="/cancelonclick">
+                    <form action="/cancelonclick" method="POST">
                             <input id="return" value="" type="submit">
-                        </form> -->
+                        </form>
 
                 <td>
                     <div style="  display: inline-flex;">
@@ -96,39 +96,17 @@
 
 <script>
 
-
-    $(document).ready(function () {
-        $("#checkbutton").change(function () {
-            if (confirm('Is this todo is completed?')) {
-                event.stopPropagation();
-                $("#checkboxsubmit").click();
-
-            }
-            // else{
-            //     alert("You cancel it.")
-            //     location.reload();
-            // }
-
-        });
-    });
-</script>
-
-
-<!-- <script>
-
     function redirect(){
-        if(this.checked) {
             if (confirm('Is this todo is completed?')) {
                 $('#checkboxsubmit').trigger('click');
             }
             else {
-                location.reload();
                 $('#return').trigger('click');
+
             }
         }
-    }
     
 
 
-</script> -->
+</script>
 {% endblock content %}

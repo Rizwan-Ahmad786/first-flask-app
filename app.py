@@ -23,7 +23,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 
-ENV = 'local'
+ENV = 'postgre'
 
 if ENV == 'local':
     app.debug = True
@@ -201,7 +201,7 @@ def uncomplete_todos():
     return render_template('uncomplete_todos.html', uncomplete_todos=uncomplete_todos)
 
 
-@app.route('/cancelonclick')
+@app.route('/cancelonclick', methods=['Get','POST'])
 def cancelonclick():
     return redirect('uncomplete_todos')
 
