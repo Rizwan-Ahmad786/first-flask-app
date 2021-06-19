@@ -99,16 +99,15 @@
 
     $(document).ready(function () {
         $("#checkbutton").change(function () {
-            if (confirm('okkkkk')) {
+            if (confirm('Is this todo is completed?')) {
                 event.stopPropagation();
-                alert("jhkdfhk");
                 $("#checkboxsubmit").click();
 
             }
-            else{
-                alert("cancel")
-            
-            }
+            // else{
+            //     alert("You cancel it.")
+            //     location.reload();
+            // }
 
         });
     });
