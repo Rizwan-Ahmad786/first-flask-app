@@ -60,19 +60,15 @@
                 <td>
 
                     <form action="/set_complete_true/{{data.id}}" method="POST">
-                        <input type="checkbox" id="checkbutton" onclick="redirect()" style="width: initial; height: initial; " />
-                       
+                        <input type="checkbox" id="checkbutton" onclick="redirect()"
+                            style="width: initial; height: initial; " />
+
                         <input id="checkboxsubmit" type="submit" value="">
-
-
-
-
                     </form>
 
                     <form action="/cancelonclick" method="POST">
-                            <input id="return" value="" type="submit">
-                        </form>
-
+                        <input id="return" value="" type="submit">
+                    </form>
                 <td>
                     <div style="  display: inline-flex;">
                         <form action="/delete/{{ data.id }}" method="POST">
@@ -84,29 +80,21 @@
                             <input type="submit" class="btn btn-success btn-sm" value="UPDATE">
                         </form>
                     </div>
-
-
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
 </div>
 
 <script>
-
-    function redirect(){
-            if (confirm('Is this todo is completed?')) {
-                $('#checkboxsubmit').trigger('click');
-            }
-            else {
-                $('#return').trigger('click');
-
-            }
+    function redirect() {
+        if (confirm('Is this todo is completed?')) {
+            $('#checkboxsubmit').trigger('click');
         }
-    
-
-
+        else {
+            $('#return').trigger('click');
+        }
+    }
 </script>
 {% endblock content %}
