@@ -19,8 +19,6 @@ import os
 import bcrypt
 
 
-
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
@@ -159,10 +157,6 @@ def login():
                 flash('Invalid username or password', 'danger')
                 return redirect(url_for('login'))
             login_user(user, remember=form.remember.data)
-            # hashed_password = bcrypt.generate_password_hash(
-            #     form.password.data).decode('utf-8')
-            # user.password = hashed_password
-            # db.session.commit()
             return redirect('uncomplete_todos')
     return render_template('login.html', form=form)
 
@@ -199,17 +193,12 @@ def add_todo():
         return render_template('add_todo.html', form=form)
 
 
-@app.route('/uncomplete_todos')
+@app.route('/uncomplete_todos', methods=['GET', 'POST'])
 @login_required
 def uncomplete_todos():
     uncomplete_todos = Todo.query.filter_by(
         user_id=current_user.id, complete=False).order_by(asc(Todo.id))
     return render_template('uncomplete_todos.html', uncomplete_todos=uncomplete_todos)
-
-
-@app.route('/cancelonclick', methods=['Get','POST'])
-def cancelonclick():
-    return redirect('uncomplete_todos')
 
 
 @app.route('/set_complete_true/<int:id>', methods=['POST'])
