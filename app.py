@@ -16,7 +16,9 @@ from flask_login import LoginManager, login_manager, UserMixin, login_user, logi
 from sqlalchemy import asc
 
 import os
-import smtplib
+import bcrypt
+
+
 
 
 app = Flask(__name__)
@@ -157,6 +159,10 @@ def login():
                 flash('Invalid username or password', 'danger')
                 return redirect(url_for('login'))
             login_user(user, remember=form.remember.data)
+            # hashed_password = bcrypt.generate_password_hash(
+            #     form.password.data).decode('utf-8')
+            # user.password = hashed_password
+            # db.session.commit()
             return redirect('uncomplete_todos')
     return render_template('login.html', form=form)
 
@@ -167,7 +173,7 @@ def signup():
     if request.method == "POST":
         if form.validate_on_submit():
             hashed_password = bcrypt.generate_password_hash(
-                form.password.data, method='sha256')
+                form.password.data).decode('utf-8')
             newuser = User(username=form.username.data,
                            email=form.email.data, password=hashed_password)
             db.session.add(newuser)
@@ -316,11 +322,11 @@ def reset_request():
 @app.route('/reset_password/<token>', methods=('GET', 'POST'))
 def reset_token(token):
     user = User.verify_token(token)
-    if user is None:
-        flash('That is an invalid or expired token', 'warning')
-        return redirect(url_for('reset_request'))
     form = ResetPasswordForm()
     if request.method == "POST":
+        if user is None:
+            flash('That is an invalid or expired token', 'warning')
+            return redirect(url_for('reset_request'))
         if form.validate_on_submit():
             hashed_password = bcrypt.generate_password_hash(
                 form.password.data).decode('utf-8')

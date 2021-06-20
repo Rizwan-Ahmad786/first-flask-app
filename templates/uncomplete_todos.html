@@ -29,7 +29,7 @@
 </nav>
 
 
-<!-- table secction -->
+
 <div class=" mt-5 container ">
     <table class="container table  table-container table-dark table-bordered table-striped text-wrap "
         style=" word-wrap: break-word;">
@@ -56,7 +56,7 @@
                 <td style="text-align: left;">{{ data.title }}</td>
                 <td class="word-wrap" style="text-align: left; height: auto;">{{ data.des}}</td>
                 <td class="text-align: center;">{{ data.datecreated }}</td>
-                <!-- checkbox -->
+                
                 <td>
 
                     <form action="/set_complete_true/{{data.id}}" method="POST">
@@ -66,7 +66,7 @@
                         <input id="checkboxsubmit" type="submit" value="">
                     </form>
 
-                    <form action="/cancelonclick" method="POST">
+                    <form action="/uncomplete_todos" method="POST">
                         <input id="return" value="" type="submit">
                     </form>
                 <td>
