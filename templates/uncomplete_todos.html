@@ -29,7 +29,7 @@
 </nav>
 
 
-<!-- table secction -->
+
 <div class=" mt-5 container ">
     <table class="container table  table-container table-dark table-bordered table-striped text-wrap "
         style=" word-wrap: break-word;">
@@ -56,23 +56,19 @@
                 <td style="text-align: left;">{{ data.title }}</td>
                 <td class="word-wrap" style="text-align: left; height: auto;">{{ data.des}}</td>
                 <td class="text-align: center;">{{ data.datecreated }}</td>
-                <!-- checkbox -->
+                
                 <td>
 
                     <form action="/set_complete_true/{{data.id}}" method="POST">
-                        <input type="checkbox" id="checkbutton" style="width: initial; height: initial; " />
-                        <input type="hidden" name="DELETE">
+                        <input type="checkbox" id="checkbutton" onclick="redirect()"
+                            style="width: initial; height: initial; " />
+
                         <input id="checkboxsubmit" type="submit" value="">
-
-
-
-
                     </form>
 
-                    <!-- <form action="/cancelonclick">
-                            <input id="return" value="" type="submit">
-                        </form> -->
-
+                    <form action="/uncomplete_todos" method="POST">
+                        <input id="return" value="" type="submit">
+                    </form>
                 <td>
                     <div style="  display: inline-flex;">
                         <form action="/delete/{{ data.id }}" method="POST">
@@ -84,51 +80,22 @@
                             <input type="submit" class="btn btn-success btn-sm" value="UPDATE">
                         </form>
                     </div>
-
-
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
 </div>
 
 <script>
 
-
-    $(document).ready(function () {
-        $("#checkbutton").change(function () {
-            if (confirm('Is this todo is completed?')) {
-                event.stopPropagation();
-                $("#checkboxsubmit").click();
-
-            }
-            else{
-                alert("You cancel it.")
-                location.reload();
-            }
-
-        });
-    });
-</script>
-
-
-<!-- <script>
-
-    function redirect(){
-        if(this.checked) {
-            if (confirm('Is this todo is completed?')) {
-                $('#checkboxsubmit').trigger('click');
-            }
-            else {
-                location.reload();
-                $('#return').trigger('click');
-            }
+    function redirect() {
+        if (confirm('Is this todo is completed?')) {
+            $('#checkboxsubmit').trigger('click');
+        }
+        else {
+            $('#return').trigger('click');
         }
     }
-    
-
-
-</script> -->
+</script>
 {% endblock content %}

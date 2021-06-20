@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+<div class="container mt-5" style="background-color: rgb(9, 13, 228); color: rgb(248, 244, 244); padding: 10px;">
+    <a href="/login" style="float: right; margin: -10px -10px 0px 0px;  padding: 8px 25px 8px 25px; "
+        type="button" class="btn-close btn-lg btn-danger" aria-label="Close">
+    </a>
+
+    <h2 class="border-bottom mb-4">Reset Password</h2>
+    <div class=" container shadow  p-3 bg-body rounded " style="color: black;">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+                <h5 >{{ wtf.form_field(form.password) }}</h5>
+                <h5 >{{ wtf.form_field(form.password2) }}</h5>
+                <h5 class="mb-4">{{ form.submit(class="btn btn-outline-info") }}</h5>
+
+           
+        </form>
+    </div>
+{% endblock content %}
