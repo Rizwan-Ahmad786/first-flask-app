@@ -23,7 +23,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hi_this_is_my_todo_task_app!'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 
-ENV = 'local'
+ENV = 'post'
 
 if ENV == 'local':
     app.debug = True
