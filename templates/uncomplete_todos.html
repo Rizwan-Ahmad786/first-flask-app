@@ -60,14 +60,10 @@
                 <td>
 
                     <form action="/set_complete_true/{{data.id}}" method="POST">
-                        <input type="checkbox" id="checkbutton" onclick="redirect()"
-                            style="width: initial; height: initial; " />
-                        <input id="checkboxsubmit" type="submit" value="">
+                        <input type="checkbox" id="checkbutton" onclick="return confirm('Is this todo is completed?')" onchange="if(this.checked){this.form.submit()}">
                     </form>
 
-                    <form action="/uncomplete_todos" method="POST">
-                        <input id="return" value="" type="submit">
-                    </form>
+                    
                 <td>
                     <div style="  display: inline-flex;">
                         <form action="/delete/{{ data.id }}" method="POST">
@@ -86,15 +82,5 @@
     </table>
 </div>
 
-<script>
 
-    function redirect() {
-        if (confirm('Is this todo is completed?')) {
-            $('#checkboxsubmit').trigger('click');
-        }
-        else {
-            $('#return').trigger('click');
-        }
-    }
-</script>
 {% endblock content %}
