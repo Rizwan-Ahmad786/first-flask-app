@@ -29,18 +29,21 @@
 </nav>
 <!-- table secction -->
 
-<div class=" mt-5 container">
-    <table class="container table  table-container table-dark table-bordered table-striped text-wrap "
-        style=" word-wrap: break-word;">
+<div class="table-responsive container-fluid  shadow-sm p-3 mb-5 border-info bg-body bg-dark rounded">
+    <table class="container-fluid table-responsive{-sm|-md|-lg|-xl|-xxl} table-responsive-dark table-bordered table-responsive-striped text-wrap "
+        style=" word-wrap: break-word; color: white; font-size: 2vw; ">
+
         <thead>
             <tr>
                 <th colspan="4">
-                <h1 class="m-1" style="background-color: white; text-align: center; color: rgb(5, 5, 5);">List of Completed Todos</h1>
-            </th>
+                <h3 style="font-size: 4vw; text-align: center" >List of
+                        Completed Todos</h3> 
+                </th>
+            </tr>
             </tr>
             <tr>
                 <th style="text-align: center;" scope="col">Sno</th>
-                <th scope="col">Title</th>
+                <th style="text-align: center;" scope="col">Title</th>
                 <th scope="col">Description</th>
                 <th style="text-align: center;" scope="col">Date Created</th>
             </tr>
@@ -49,8 +52,8 @@
         <tbody style="text-align: center;">
             <tr>
                 <td scope="row">{{loop.index}}</td>
-                <td style="text-align: left;">{{ data.title }}</td>
-                <td style="text-align: left;">{{ data.des}}</td>
+                <td style="text-align: left; padding-left: 20px;">{{ data.title }}</td>
+                <td style="text-align: left; ">{{ data.des}}</td>
                 <td class="text-align: center;">{{ data.datecreated }}</td>
             </tr>
             {% endfor %}
